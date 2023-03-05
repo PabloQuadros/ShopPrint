@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ShopPrint.Application\ShopPrint.Application.csproj" />
+    <ProjectReference Include="..\ShopPrint.Domain\ShopPrint.Domain.csproj" />
+    <ProjectReference Include="..\ShopPrint.Infra.Data\ShopPrint.Infra.Data.csproj" />
+  </ItemGroup>
+
 </Project>

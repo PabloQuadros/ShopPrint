@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ShopPrint.Domain.Entities
 {
-    public class UserIdentity
+    public interface IUser
     {
         //UserName(string) : o nome de usuário do usuário.É obrigatório e deve ser único.
         //Email(string): o endereço de e-mail do usuário.É opcional, mas se fornecido, deve ser único.

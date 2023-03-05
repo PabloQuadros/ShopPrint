@@ -11,7 +11,7 @@ namespace ShopPrint.Domain.Entities
         public int Id { get; set; }
         public DateTime OrderDate { get; set; }
         public int UserId { get; set; }
-        public virtual ApplicationUser User { get; set; }
+        public virtual IUser User { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
     }
 }
