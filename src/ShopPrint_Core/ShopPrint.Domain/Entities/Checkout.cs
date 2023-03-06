@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShopPrint.Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,19 @@ namespace ShopPrint.Domain.Entities
 {
     public class Checkout
     {
+        public int Id { get; set; }
+        public int OrderId { get; set; }
+        public virtual Order order { get; set; }
+        public PaymentOption paymentOption { get; set; }
+        public string Description { get; set; }
+        public DateTime dateTime { get; set; }
+        public string country { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
+        public string road { get; set; }
+        public string number { get; set; }
+        public string complement { get; set; }
+        public string zipcode { get; set; }
+
     }
 }

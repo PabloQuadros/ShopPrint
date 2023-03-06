@@ -8,5 +8,9 @@ namespace ShopPrint.Domain.Enum
 {
     public enum PaymentOption
     {
+        Pix = 1,
+        Debit =2,
+        Crédit = 3,
+        Ticket =4
     }
 }
