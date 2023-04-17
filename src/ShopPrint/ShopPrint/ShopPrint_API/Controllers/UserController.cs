@@ -82,7 +82,7 @@ namespace ShopPrint_API.Controllers
 
         [HttpPut]
         [Route("Update")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromBody] UserDTO user)
         {
             try

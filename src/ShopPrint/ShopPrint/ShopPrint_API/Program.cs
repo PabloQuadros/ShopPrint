@@ -75,6 +75,7 @@ builder.Services.Configure<JsonOptions>(options =>
 });
 builder.Services.AddAutoMapper(typeof(DomainToDtoMappingProfile));
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<CategoryService>();
 
 var app = builder.Build();
 

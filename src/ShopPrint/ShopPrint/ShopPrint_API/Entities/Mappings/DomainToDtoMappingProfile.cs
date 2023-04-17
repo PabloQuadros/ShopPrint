@@ -9,6 +9,8 @@ namespace ShopPrint_API.Entities.Mappings
         public DomainToDtoMappingProfile() 
         {
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<Product,ProdutDTO>().ReverseMap();
+            CreateMap<Category, CategoryDTO>().ReverseMap();
         }
     }
 }
