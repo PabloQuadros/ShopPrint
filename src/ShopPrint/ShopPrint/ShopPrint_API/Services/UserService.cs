@@ -104,7 +104,8 @@ namespace ShopPrint_API.Services
                 {
                     return "Usuário não localizado.";
                 }
-                return user;
+                UserDTO userDto = _mapper.Map<UserDTO>(user);
+                return userDto;
             }
             catch (Exception ex)
             {

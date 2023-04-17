@@ -101,8 +101,8 @@ namespace ShopPrint_API.Services
                 {
                     return "Categoria não localizada.";
                 }
-                await _categoryCollection.DeleteOneAsync(x => x.Id == category.Id); 
-                return "Categoria deletada."
+                await _categoryCollection.DeleteOneAsync(x => x.Id == category.Id);
+                return "Categoria deletada.";
             }
             catch(Exception ex)
             {

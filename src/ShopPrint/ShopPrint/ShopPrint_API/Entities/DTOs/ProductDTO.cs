@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ShopPrint_API.Entities.DTOs
 {
-    public class ProdutDTO
+    public class ProductDTO
     {
         public string? Id { get; set; }
 

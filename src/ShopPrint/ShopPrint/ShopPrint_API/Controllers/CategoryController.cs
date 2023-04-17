@@ -34,7 +34,7 @@ namespace ShopPrint_API.Controllers
 
         [HttpGet]
         [Route("GetById/{id}")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCategoryById([FromRoute] string id)
         {
             try
@@ -50,7 +50,7 @@ namespace ShopPrint_API.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllCategory()
         {
             try
