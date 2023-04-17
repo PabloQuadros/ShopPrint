@@ -31,8 +31,7 @@ namespace ShopPrint.Domain.Entities
         public string Image { get; set; }
 
         [Required(ErrorMessage ="Necessário informar uma categoria.")]
-        public int CategoryId { get; set; }
-        public virtual Category Category { get; set; }
-        //public ICollection<OrderItem> OrderItems { get; set; }
+        public string CategoryName { get; set; }
+
     }
 }

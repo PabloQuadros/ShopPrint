@@ -1,4 +1,5 @@
 ﻿using ShopPrint.Application.DTOs;
+using ShopPrint.Domain.Entities;
 using ShopPrint.Domain.Enum;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace ShopPrint.Application.Interfaces
     {
         Task<IEnumerable<ProductDTO>> GetProducts();
         Task<IEnumerable<ProductDTO>> GetProductsByFilter(IEnumerable<string> categories, decimal? minPrice, decimal? maxPrice, SortOption sortOption);
+        Task<Product> GetById(int id);
         Task Add (ProductDTO productDTO);
         Task Update (ProductDTO productDTO);
         Task Delete (int id);

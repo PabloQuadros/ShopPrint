@@ -1,16 +1,14 @@
 ﻿using ShopPrint.Domain.Validation.Shared;
 using ShopPrint.Domain.Validation.User;
-using ShopPrint.Domain.Validation.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShopPrint.Domain.Entities
+namespace ShopPrint.Application.DTOs
 {
-    public class User
+    public class UserDTO
     {
         public string? Id { get; set; }
         [NameValidation]
@@ -23,6 +21,5 @@ namespace ShopPrint.Domain.Entities
         public string? PhoneNumber { get; set; }
         [UserRoleValidation]
         public string? Role { get; set; }
-
     }
 }

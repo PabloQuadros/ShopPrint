@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShopPrint.Domain.Account
+namespace ShopPrint.Application.Interfaces
 {
-    public interface ISeedUserRoleInitial
+    public class IUserService
     {
-        void SeedUsers();
-        void SeedRoles();
     }
 }

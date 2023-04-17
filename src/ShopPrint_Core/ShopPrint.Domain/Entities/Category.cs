@@ -13,6 +13,5 @@ namespace ShopPrint.Domain.Entities
 
         [NameValidation]
         public string Name { get; set; }
-        public virtual ICollection<Product> Products { get; set; }
     }
 }

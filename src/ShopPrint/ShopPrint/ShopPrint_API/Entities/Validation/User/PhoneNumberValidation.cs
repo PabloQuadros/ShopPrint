@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace ShopPrint.Domain.Validation.Product
+namespace ShopPrint_API.Entities.Validation.User
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
-    public class ProductDescriptionValidation : ValidationAttribute
+    public class PhoneNumberValidation : ValidationAttribute
     {
-
         public override bool IsValid(object? value)
         {
             if (value == null)
@@ -19,20 +13,17 @@ namespace ShopPrint.Domain.Validation.Product
                 return false;
             }
 
-            var description = value.ToString();
+            var phoneNumber = value.ToString();
 
-            if (!Regex.IsMatch(description, @"^[a-zA-Z0-9 ]{1,200}$"))
+            if (!Regex.IsMatch(phoneNumber, @"^\+55\s\d{2}\s\d{5}\-\d{4}$"))
             {
                 return false;
             }
-
             return true;
         }
-
         public override string FormatErrorMessage(string field)
         {
-            return $"O campo {field} deve conter no máximo 200 caracteres.;";
+            return $"O campo {field} está inválido.";
         }
     }
 }
-

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopPrint_API", "ShopPrint_API\ShopPrint_API.csproj", "{BCD9BD52-7DFF-4409-87DE-09F7F821058B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BCD9BD52-7DFF-4409-87DE-09F7F821058B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCD9BD52-7DFF-4409-87DE-09F7F821058B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCD9BD52-7DFF-4409-87DE-09F7F821058B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCD9BD52-7DFF-4409-87DE-09F7F821058B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1B2F8A89-55AA-4926-855E-6BDB922B70C4}
+	EndGlobalSection
+EndGlobal
