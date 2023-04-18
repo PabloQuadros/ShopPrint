@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  shopprint_db:
+    image: mongo
+
+  #shopprint_api:
+  #  image: ${DOCKER_REGISTRY-}shopprintapi
+  #  build:
+  #    context: .
+  #    dockerfile: ShopPrint_API/Dockerfile
+
+volumes:
+  mongo_data:

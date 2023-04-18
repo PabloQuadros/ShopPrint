@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+
+  shopprint_db:
+    container_name: shopprint_db
+    restart: always
+    ports: 
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: shopPrint@123
+      MONGO_INITDB_DATABASE: admin
+      AUTH_MECHANISM: SCRAM-SHA-256
+    command: mongod --bind_ip_all
+
+  #shopprint_api:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #  ports:
+  #    - "8001:80"
+  #  depends_on:
+  #    - shopprint_db

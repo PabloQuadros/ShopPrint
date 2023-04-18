@@ -89,7 +89,7 @@ namespace ShopPrint_API.Controllers
         {
             try
             {
-                var result = await _productService.UpdateProduct(updateProduct);
+                var result = await _productService.UpdateProduct(product);
                 return Ok(result);
             }
             catch (Exception ex)
