@@ -81,5 +81,21 @@ namespace ShopPrint_API.Controllers
                 return BadRequest(new { message = ex.Message.ToString() });
             }
         }
+
+        [HttpPut]
+        [Route("Update")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductDTO product)
+        {
+            try
+            {
+                var result = await _productService.UpdateProduct(updateProduct);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message.ToString() });
+            }
+        }
     }
 }

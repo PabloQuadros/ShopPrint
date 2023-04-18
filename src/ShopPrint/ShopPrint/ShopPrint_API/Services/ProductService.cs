@@ -74,5 +74,22 @@ namespace ShopPrint_API.Services
                 throw;
             }
         }
+
+        public async Task<string> UpdateProduct(ProductDTO updateProduct)
+        {
+            Product product = await _productCollection.Find(x => x.Id == updateProduct.Id).FirstOrDefaultAsync();
+            if(product == null)
+            {
+                return "Produto não localizado.";
+            }
+            product = await _productCollection.Find(x => x.Name == updateProduct.Name).FirstOrDefaultAsync();
+            if(product.Id != updateProduct.Id && product.Name == updateProduct.Name) 
+            {
+                return "Já existe um produto registrado com esse nome.";
+            }
+            product = _mapper.Map<Product>(updateProduct);
+            await _productCollection.ReplaceOneAsync(x => x.Id == product.Id, product);
+            return product.Id;
+        }
     }
 }
