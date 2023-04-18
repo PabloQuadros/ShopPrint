@@ -13,8 +13,8 @@ namespace ShopPrint_API.DataBase.Mongo
             MongoClientSettings settings = new MongoClientSettings();
             settings.Server = new MongoServerAddress(mongoSettings.Value.Host, Convert.ToInt32(mongoSettings.Value.Port));
             settings.UseTls = false;
-            //settings.SslSettings = new SslSettings();
-            //settings.SslSettings.EnabledSslProtocols = SslProtocols.Tls12;
+            settings.SslSettings = new SslSettings();
+            settings.SslSettings.EnabledSslProtocols = SslProtocols.Tls12;
 
             MongoIdentity identity = new MongoInternalIdentity(mongoSettings.Value.DatabaseName, mongoSettings.Value.User);
             MongoIdentityEvidence evidence = new PasswordEvidence(mongoSettings.Value.Password);
