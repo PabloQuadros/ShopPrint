@@ -77,6 +77,7 @@ builder.Services.AddAutoMapper(typeof(DomainToDtoMappingProfile));
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<CategoryService>();
 builder.Services.AddSingleton<ProductService>();
+builder.Services.AddSingleton<CartService>();
 
 var app = builder.Build();
 

@@ -24,7 +24,7 @@ namespace ShopPrint_API.Services
             Product product = await _productCollection.Find(x => x.Name == newProduct.Name).FirstOrDefaultAsync();
             if(product != null)
             {
-                return $"Já existe um produto cadastrado com o nome: {newProduct.Name}";
+                throw new Exception($"Já existe um produto cadastrado com o nome: {newProduct.Name}");
             }
             product = _mapper.Map<Product>(newProduct);
             product.Id = ObjectId.GenerateNewId().ToString();
@@ -37,7 +37,7 @@ namespace ShopPrint_API.Services
             Product product = await _productCollection.Find(x => x.Id == Id).FirstOrDefaultAsync();
             if(product == null )
             {
-                return "Produto nao localizado";
+                throw new Exception("Produto nao localizado");
             }
             ProductDTO productDto = _mapper.Map<ProductDTO>(product);
             return productDto;
@@ -64,7 +64,7 @@ namespace ShopPrint_API.Services
                 Product product = await _productCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
                 if(product == null)
                 {
-                    return "Produto não localizado.";
+                    throw new Exception("Produto não localizado.");
                 }
                 await _productCollection.DeleteOneAsync(x => x.Id == id);
                 return "Produto deletado.";
@@ -80,12 +80,12 @@ namespace ShopPrint_API.Services
             Product product = await _productCollection.Find(x => x.Id == updateProduct.Id).FirstOrDefaultAsync();
             if(product == null)
             {
-                return "Produto não localizado.";
+                throw new Exception("Produto não localizado.");
             }
             product = await _productCollection.Find(x => x.Name == updateProduct.Name).FirstOrDefaultAsync();
             if(product.Id != updateProduct.Id && product.Name == updateProduct.Name) 
             {
-                return "Já existe um produto registrado com esse nome.";
+                throw new Exception("Já existe um produto registrado com esse nome.");
             }
             product = _mapper.Map<Product>(updateProduct);
             await _productCollection.ReplaceOneAsync(x => x.Id == product.Id, product);

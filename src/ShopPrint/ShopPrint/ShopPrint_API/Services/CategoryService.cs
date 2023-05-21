@@ -27,7 +27,7 @@ namespace ShopPrint_API.Services
                 Category category = await _categoryCollection.Find(x => x.Name == newCategory.Name).FirstOrDefaultAsync();
                 if (category != null)
                 {
-                    return $"A categoria {category.Name} já está cadastrada.";
+                    throw new Exception($"A categoria {category.Name} já está cadastrada.");
                 }
                 category = _mapper.Map<Category>(newCategory);
                 category.Id = ObjectId.GenerateNewId().ToString();
@@ -47,7 +47,7 @@ namespace ShopPrint_API.Services
                 Category category = await _categoryCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
                 if (category == null) 
                 {
-                    return "Categoria não localizada.";
+                    throw new Exception("Categoria não localizada.");
                 }
                 CategoryDTO categoryDto = _mapper.Map<CategoryDTO>(category);
                 return categoryDto;
