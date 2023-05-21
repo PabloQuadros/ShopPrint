@@ -163,5 +163,82 @@ namespace ShopPrint_API.Services
                 throw;
             }
         }
+
+        public async Task<object> GetCartByUserId(string userId)
+        {
+            User user = await _userCollection.Find(x => x.Id == userId).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new Exception("Usuário não localizado.");
+            }
+            Cart cart = await _cartCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+            if (cart == null)
+            {
+                throw new Exception("O usuário não possuí um carrinho");
+            }
+            return cart;
+        }
+
+        public async Task<object> RemoveProductOfCart(string productId, string userId)
+        {
+            try
+            {
+                User user = await _userCollection.Find(x => x.Id == userId).FirstOrDefaultAsync();
+                if (user == null)
+                {
+                    throw new Exception("Usuário não localizado.");
+                }
+                Product product = await _productCollection.Find(x => x.Id == productId).FirstOrDefaultAsync();
+                if (product == null)
+                {
+                    throw new Exception("Produto não localizado.");
+                }
+                Cart cart = await _cartCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+                if (cart == null)
+                {
+                    throw new Exception("O usuário não possuí um carrinho");
+                }
+                foreach (var item in cart.Items)
+                {
+                    if (item.ProductId == productId)
+                    {
+                        product.Stock += item.Quantity;
+                        await _productCollection.ReplaceOneAsync(x => x.Id == product.Id, product);
+                        cart.Items.Remove(item);
+                        if (cart.Items.Count == 0)
+                        {
+                            await _cartCollection.DeleteOneAsync(x => x.Id == cart.Id);
+                            return "Item removido com sucesso.";
+                        }
+                        if (cart.Items.Count > 0)
+                        {
+                            cart.TotalPrice -= product.Price;
+                        }
+                        await _cartCollection.ReplaceOneAsync(x => x.Id == cart.Id, cart);
+                        return "Item removido com sucesso.";
+                    }
+                }
+                return "O item informado não está no carrinho.";
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<object> DeleteCart(string userId)
+        {
+            User user = await _userCollection.Find(x => x.Id == userId).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new Exception("Usuário não localizado.");
+            }
+            Cart cart = await _cartCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+            if (cart == null)
+            {
+                throw new Exception("O usuário não possuí um carrinho");
+            }
+            await _cartCollection.DeleteOneAsync(x => x.Id == cart.Id);
+            return "Carrinho excluído com sucesso.";
+        }
     }
 }

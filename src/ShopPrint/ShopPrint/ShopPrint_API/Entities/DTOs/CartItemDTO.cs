@@ -16,4 +16,3 @@ namespace ShopPrint_API.Entities.DTOs
         public double Price { get; set; }
     }
 }
-.
