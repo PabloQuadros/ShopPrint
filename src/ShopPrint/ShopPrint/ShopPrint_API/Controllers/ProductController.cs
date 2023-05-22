@@ -100,7 +100,6 @@ namespace ShopPrint_API.Controllers
 
         [HttpPost]
         [Route("Filter")]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> FilterProducts([FromBody] FilterDTO filter)
         {
             try

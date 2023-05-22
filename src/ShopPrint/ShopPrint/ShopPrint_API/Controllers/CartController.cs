@@ -81,7 +81,7 @@ namespace ShopPrint_API.Controllers
 
         [HttpGet]
         [Route("GetByUserId/{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetCartByUserId([FromRoute] string id)
         {
             try
