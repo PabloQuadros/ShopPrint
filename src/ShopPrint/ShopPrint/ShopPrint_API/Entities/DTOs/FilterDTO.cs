@@ -6,8 +6,8 @@ namespace ShopPrint_API.Entities.DTOs
     {
         public double? minValue { get; set; }
         public double? maxValue { get; set; }
-        public string? Category { get; set; }
-        public string? Color { get; set; }
-        public string? Material { get; set; }
+        public List<string>? Category { get; set; }
+        public List<string> Color { get; set; }
+        public List<string> Material { get; set; }
     }
 }

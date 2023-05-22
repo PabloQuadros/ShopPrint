@@ -2,29 +2,30 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopPrint_API.Entities.DTOs;
 using ShopPrint_API.Services;
+using System.Data;
 
 namespace ShopPrint_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CategoryController : Controller
+    public class MaterialController : Controller
     {
-        public readonly CategoryService _categoryService;
+        public readonly MaterialService _materialService;
 
-        public CategoryController(CategoryService categoryService)
+        public MaterialController(MaterialService materialService)
         {
-            _categoryService = categoryService;
+            _materialService = materialService;
         }
 
         [HttpPost]
         [Route("Create")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateCategory([FromBody] CategoryDTO category)
+        public async Task<IActionResult> CreateMaterial([FromBody] MaterialDTO material)
         {
             try
             {
-                var categoryId = await _categoryService.CreateCategory(category);
-                return Ok(categoryId);
+                var materialId = await _materialService.Create(material);
+                return Ok(materialId);
             }
             catch (Exception ex)
             {
@@ -35,12 +36,12 @@ namespace ShopPrint_API.Controllers
         [HttpGet]
         [Route("GetById/{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetCategoryById([FromRoute] string id)
+        public async Task<IActionResult> GetMaterialById([FromRoute] string id)
         {
             try
             {
-                var categoryId = await _categoryService.GetCategoryById(id);
-                return Ok(categoryId);
+                var material = await _materialService.GetMaterialById(id);
+                return Ok(material);
             }
             catch (Exception ex)
             {
@@ -51,12 +52,12 @@ namespace ShopPrint_API.Controllers
         [HttpGet]
         [Route("GetAll")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllCategory()
+        public async Task<IActionResult> GetAllMaterial()
         {
             try
             {
-                var categoryList = await _categoryService.GetAllCategories();
-                return Ok(categoryList);
+                var materialList = await _materialService.GetAllMaterial();
+                return Ok(materialList);
             }
             catch (Exception ex)
             {
@@ -67,13 +68,13 @@ namespace ShopPrint_API.Controllers
 
         [HttpPut]
         [Route("Update")]
-        [Authorize]
-        public async Task<IActionResult> UpdateCategory([FromBody] CategoryDTO category)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateMaterial([FromBody] MaterialDTO material)
         {
             try
             {
-                var categoryId = await _categoryService.UpdateCategory(category);
-                return Ok(categoryId);
+                var materialId = await _materialService.UpdateMaterial(material);
+                return Ok(materialId);
             }
             catch (Exception ex)
             {
@@ -88,14 +89,12 @@ namespace ShopPrint_API.Controllers
         {
             try
             {
-                var categoryId = await _categoryService.DeleteCategory(id);
-                return Ok(categoryId);
+                return Ok(await _materialService.DeleteMaterial(id));
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message.ToString() });
             }
         }
-
     }
 }

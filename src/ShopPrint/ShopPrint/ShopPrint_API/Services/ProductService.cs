@@ -12,11 +12,17 @@ namespace ShopPrint_API.Services
     public class ProductService
     {
         public readonly IMongoCollection<Product> _productCollection;
+        public readonly IMongoCollection<Category> _categoryCollection;
+        public readonly IMongoCollection<Color> _colorCollection;
+        public readonly IMongoCollection<Material> _materialCollection;
         private readonly IMapper _mapper;
         public ProductService(IOptions<MongoSettings> mongoSettingsPar, IMapper mapper)
         {
             MongoService mongoSettings = new MongoService(mongoSettingsPar);
             _productCollection = mongoSettings._iMongoDatabase.GetCollection<Product>("Product");
+            _categoryCollection = mongoSettings._iMongoDatabase.GetCollection<Category>("Category");
+            _colorCollection = mongoSettings._iMongoDatabase.GetCollection<Color>("Color");
+            _materialCollection = mongoSettings._iMongoDatabase.GetCollection<Material>("Material");
             _mapper = mapper;
         }
 
@@ -99,21 +105,21 @@ namespace ShopPrint_API.Services
             var filterBuilder = Builders<Product>.Filter;
             var filters = new List<FilterDefinition<Product>>();
 
-            if (!string.IsNullOrEmpty(filter.Color))
+            if (filter.Color.Count > 0)
             {
-                var colorFilter = filterBuilder.Eq(x => x.Color,filter.Color);
+                var colorFilter = filterBuilder.In(x => x.Color,filter.Color);
                 filters.Add(colorFilter);
             }
 
-            if (!string.IsNullOrEmpty(filter.Material))
+            if (filter.Material.Count> 0)
             {
-                var materialFilter = filterBuilder.Eq(x => x.Material, filter.Material);
+                var materialFilter = filterBuilder.In(x => x.Material, filter.Material);
                 filters.Add(materialFilter);
             }
 
-            if (!string.IsNullOrEmpty(filter.Category))
+            if (filter.Category.Count > 0)
             {
-                var categoryFilter = filterBuilder.Eq(x => x.CategoryName, filter.Category);
+                var categoryFilter = filterBuilder.In(x => x.CategoryName, filter.Category);
                 filters.Add(categoryFilter);
             }
 

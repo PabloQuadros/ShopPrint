@@ -6,6 +6,6 @@ namespace ShopPrint_API.Entities.DTOs
     {
         public string Id { get; set; }
         [NameValidation]
-        public string Material { get; set; }
+        public string Name { get; set; }
     }
 }

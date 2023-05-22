@@ -2,29 +2,30 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopPrint_API.Entities.DTOs;
 using ShopPrint_API.Services;
+using System.Data;
 
 namespace ShopPrint_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CategoryController : Controller
+    public class ColorController : Controller
     {
-        public readonly CategoryService _categoryService;
+        public readonly ColorService _colorService;
 
-        public CategoryController(CategoryService categoryService)
+        public ColorController(ColorService colorService)
         {
-            _categoryService = categoryService;
+            _colorService = colorService;
         }
 
         [HttpPost]
         [Route("Create")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateCategory([FromBody] CategoryDTO category)
+        public async Task<IActionResult> CreadColor([FromBody] ColorDTO color)
         {
             try
             {
-                var categoryId = await _categoryService.CreateCategory(category);
-                return Ok(categoryId);
+                var colorId = await _colorService.Create(color);
+                return Ok(colorId);
             }
             catch (Exception ex)
             {
@@ -35,12 +36,12 @@ namespace ShopPrint_API.Controllers
         [HttpGet]
         [Route("GetById/{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetCategoryById([FromRoute] string id)
+        public async Task<IActionResult> GetColorById([FromRoute] string id)
         {
             try
             {
-                var categoryId = await _categoryService.GetCategoryById(id);
-                return Ok(categoryId);
+                var color = await _colorService.GetColorById(id);
+                return Ok(color);
             }
             catch (Exception ex)
             {
@@ -51,12 +52,12 @@ namespace ShopPrint_API.Controllers
         [HttpGet]
         [Route("GetAll")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllCategory()
+        public async Task<IActionResult> GetAllColor()
         {
             try
             {
-                var categoryList = await _categoryService.GetAllCategories();
-                return Ok(categoryList);
+                var colorList = await _colorService.GetAllColor();
+                return Ok(colorList);
             }
             catch (Exception ex)
             {
@@ -67,13 +68,13 @@ namespace ShopPrint_API.Controllers
 
         [HttpPut]
         [Route("Update")]
-        [Authorize]
-        public async Task<IActionResult> UpdateCategory([FromBody] CategoryDTO category)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateColor([FromBody] ColorDTO color)
         {
             try
             {
-                var categoryId = await _categoryService.UpdateCategory(category);
-                return Ok(categoryId);
+                var colorId = await _colorService.UpdateColor(color);
+                return Ok(colorId);
             }
             catch (Exception ex)
             {
@@ -88,14 +89,12 @@ namespace ShopPrint_API.Controllers
         {
             try
             {
-                var categoryId = await _categoryService.DeleteCategory(id);
-                return Ok(categoryId);
+                return Ok(await _colorService.DeleteColor(id));
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message.ToString() });
             }
         }
-
     }
 }

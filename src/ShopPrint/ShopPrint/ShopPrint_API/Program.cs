@@ -78,6 +78,8 @@ builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<CategoryService>();
 builder.Services.AddSingleton<ProductService>();
 builder.Services.AddSingleton<CartService>();
+builder.Services.AddSingleton<ColorService>();
+builder.Services.AddSingleton<MaterialService>();
 
 var app = builder.Build();
 
