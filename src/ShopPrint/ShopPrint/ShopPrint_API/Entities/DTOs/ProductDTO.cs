@@ -26,9 +26,10 @@ namespace ShopPrint_API.Entities.DTOs
         public string Image { get; set; }
 
         [Required(ErrorMessage = "Necessário informar uma categoria.")]
-        public string CategoryName
-        {
-            get; set;
-        }
+        public string CategoryName { get; set; }
+        [Required(ErrorMessage = "Necessário informar um matrial.")]
+        public string Material { get; set; }
+        [Required(ErrorMessage = "Necessário informar uma cor.")]
+        public string Color { get; set; }
     }
 }

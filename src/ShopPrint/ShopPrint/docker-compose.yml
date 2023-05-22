@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   shopprint_db:
-    image: mongo
+    image: mongo:latest
 
   #shopprint_api:
   #  image: ${DOCKER_REGISTRY-}shopprintapi

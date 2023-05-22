@@ -27,5 +27,10 @@ namespace ShopPrint_API.Entities.Models
 
             [Required(ErrorMessage = "Necessário informar uma categoria.")]
             public string CategoryName { get; set; }
+            [Required(ErrorMessage = "Necessário informar um matrial.")]
+            public string Material { get; set; }
+            [Required(ErrorMessage = "Necessário informar uma cor.")]
+            public string Color { get; set; }
+
     }
 }

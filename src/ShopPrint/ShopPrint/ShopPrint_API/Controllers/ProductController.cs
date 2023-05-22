@@ -97,5 +97,21 @@ namespace ShopPrint_API.Controllers
                 return BadRequest(new { message = ex.Message.ToString() });
             }
         }
+
+        [HttpPost]
+        [Route("Filter")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> FilterProducts([FromBody] FilterDTO filter)
+        {
+            try
+            {
+                var result = await _productService.Filter(filter);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message.ToString() });
+            }
+        }
     }
 }

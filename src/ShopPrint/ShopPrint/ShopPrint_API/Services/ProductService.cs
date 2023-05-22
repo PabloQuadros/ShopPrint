@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using ShopPrint_API.DataBase.Mongo;
 using ShopPrint_API.Entities.DTOs;
 using ShopPrint_API.Entities.Models;
+using System.Runtime.ConstrainedExecution;
 
 namespace ShopPrint_API.Services
 {
@@ -90,6 +91,57 @@ namespace ShopPrint_API.Services
             product = _mapper.Map<Product>(updateProduct);
             await _productCollection.ReplaceOneAsync(x => x.Id == product.Id, product);
             return product.Id;
+        }
+
+
+        public async Task<IEnumerable<ProductDTO>> Filter(FilterDTO filter)
+        {
+            var filterBuilder = Builders<Product>.Filter;
+            var filters = new List<FilterDefinition<Product>>();
+
+            if (!string.IsNullOrEmpty(filter.Color))
+            {
+                var colorFilter = filterBuilder.Eq(x => x.Color,filter.Color);
+                filters.Add(colorFilter);
+            }
+
+            if (!string.IsNullOrEmpty(filter.Material))
+            {
+                var materialFilter = filterBuilder.Eq(x => x.Material, filter.Material);
+                filters.Add(materialFilter);
+            }
+
+            if (!string.IsNullOrEmpty(filter.Category))
+            {
+                var categoryFilter = filterBuilder.Eq(x => x.CategoryName, filter.Category);
+                filters.Add(categoryFilter);
+            }
+
+            if (filter.minValue.HasValue && filter.minValue >= 0)
+            {
+                var minValueFilter = filterBuilder.Lte(x => x.Price, filter.minValue);
+                filters.Add(minValueFilter);
+            }
+
+            if (filter.maxValue.HasValue && filter.maxValue >= 0)
+            {
+                var maxValueFilter = filterBuilder.Gte(x => x.Price, filter.maxValue);
+                filters.Add(maxValueFilter);
+            }
+
+            var combinedFilter = filterBuilder.And(filters);
+
+            var results = _productCollection.Find(combinedFilter).ToList();
+
+            List<ProductDTO> returnList = new List<ProductDTO>();
+            if(results.Count > 0) 
+            {
+                foreach (var item in results)
+                {
+                    returnList.Add(_mapper.Map<ProductDTO>(item));
+                }
+            }
+            return returnList;
         }
     }
 }
