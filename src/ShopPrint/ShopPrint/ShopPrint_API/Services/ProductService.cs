@@ -33,8 +33,26 @@ namespace ShopPrint_API.Services
             {
                 throw new Exception($"Já existe um produto cadastrado com o nome: {newProduct.Name}");
             }
+            Category category = await _categoryCollection.Find(x => x.Name.ToLower() == newProduct.CategoryName.ToLower()).FirstOrDefaultAsync();
+            if(category == null)
+            {
+                throw new Exception("A categoria informada não existe.");
+            }
+            Color color = await _colorCollection.Find(x => x.Name.ToLower() == newProduct.Color.ToLower()).FirstOrDefaultAsync();
+            if(color == null)
+            {
+                throw new Exception("A cor informada não existe.");
+            }
+            Material material = await _materialCollection.Find(x => x.Name.ToLower() == newProduct.Material.ToLower()).FirstOrDefaultAsync();
+            if(material == null)
+            {
+                throw new Exception("O material informado não existe.");
+            }
             product = _mapper.Map<Product>(newProduct);
             product.Id = ObjectId.GenerateNewId().ToString();
+            product.Material = material.Name;
+            product.Color = color.Name;
+            product.CategoryName = category.Name;
             await _productCollection.InsertOneAsync(product);
             return product.Id;
         }
@@ -94,7 +112,25 @@ namespace ShopPrint_API.Services
             {
                 throw new Exception("Já existe um produto registrado com esse nome.");
             }
+            Category category = await _categoryCollection.Find(x => x.Name.ToLower() == updateProduct.CategoryName.ToLower()).FirstOrDefaultAsync();
+            if (category == null)
+            {
+                throw new Exception("A categoria informada não existe.");
+            }
+            Color color = await _colorCollection.Find(x => x.Name.ToLower() == updateProduct.Color.ToLower()).FirstOrDefaultAsync();
+            if (color == null)
+            {
+                throw new Exception("A cor informada não existe.");
+            }
+            Material material = await _materialCollection.Find(x => x.Name.ToLower() == updateProduct.Material.ToLower()).FirstOrDefaultAsync();
+            if (material == null)
+            {
+                throw new Exception("O material informado não existe.");
+            }
             product = _mapper.Map<Product>(updateProduct);
+            product.Material = material.Name;
+            product.Color = color.Name;
+            product.CategoryName = category.Name;
             await _productCollection.ReplaceOneAsync(x => x.Id == product.Id, product);
             return product.Id;
         }
