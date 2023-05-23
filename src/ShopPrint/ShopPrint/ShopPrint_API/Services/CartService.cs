@@ -66,6 +66,10 @@ namespace ShopPrint_API.Services
                     throw new Exception("Produto não localizado.");
                 }
                 Cart cart = await _cartCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+                if (product.Stock == 0)
+                {
+                    throw new Exception("Produto Indisponível.");
+                }
                 if (cart == null)
                 {
                     CartDTO newCart = new CartDTO
