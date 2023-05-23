@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopPrint_API.Entities.DTOs;
 using ShopPrint_API.Services;
-using System.Data;
 
 namespace ShopPrint_API.Controllers
 {
@@ -35,13 +34,13 @@ namespace ShopPrint_API.Controllers
         }
 
         [HttpPut]
-        [Route("AddItem/{userId}")]
+        [Route("AddItem")]
         [Authorize]
-        public async Task<IActionResult> AddItem([FromRoute] string userId, [FromBody] string productId)
+        public async Task<IActionResult> AddItem(ModifyCart modifyCart)
         {
             try
             {
-                return Ok(await _cartService.AddItem(userId, productId));
+                return Ok(await _cartService.AddItem(modifyCart));
             }
             catch (Exception ex)
             {
@@ -50,13 +49,13 @@ namespace ShopPrint_API.Controllers
         }
 
         [HttpPut]
-        [Route("RemoveItem/{userId}")]
+        [Route("RemoveItem")]
         [Authorize]
-        public async Task<IActionResult> RemoveItem([FromRoute] string userId, [FromBody] string productId)
+        public async Task<IActionResult> RemoveItem(ModifyCart modifyCart)
         {
             try
             {
-                return Ok(await _cartService.RemoveItem(userId, productId));
+                return Ok(await _cartService.RemoveItem(modifyCart));
             }
             catch (Exception ex)
             {
@@ -65,13 +64,13 @@ namespace ShopPrint_API.Controllers
         }
 
         [HttpPut]
-        [Route("RemoveProduct/{userId}")]
+        [Route("RemoveProduct")]
         [Authorize]
-        public async Task<IActionResult> RemoveProduct([FromRoute] string userId, [FromBody] string productId)
+        public async Task<IActionResult> RemoveProduct(ModifyCart modifyCart)
         {
             try
             {
-                return Ok(await _cartService.RemoveProductOfCart(userId, productId));
+                return Ok(await _cartService.RemoveProductOfCart(modifyCart));
             }
             catch (Exception ex)
             {

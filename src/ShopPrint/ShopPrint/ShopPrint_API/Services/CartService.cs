@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using ShopPrint_API.DataBase.Mongo;
 using ShopPrint_API.Entities.DTOs;
 using ShopPrint_API.Entities.Models;
-using System.Security;
 
 namespace ShopPrint_API.Services
 {
@@ -38,7 +35,7 @@ namespace ShopPrint_API.Services
                 Cart cart = await _cartCollection.Find(x => x.UserId == newCart.UserId).FirstOrDefaultAsync();
                 if (cart != null)
                 {
-                    throw new Exception ("Este usuário já possuí um carrinho.");
+                    throw new Exception("Este usuário já possuí um carrinho.");
                 }
                 cart = _mapper.Map<Cart>(newCart);
                 cart.Id = ObjectId.GenerateNewId().ToString();
@@ -51,21 +48,21 @@ namespace ShopPrint_API.Services
             }
         }
 
-        public async Task<object> AddItem(string productId,  string userId)
+        public async Task<object> AddItem(ModifyCart modifyCart)
         {
             try
             {
-                User user = await _userCollection.Find(x => x.Id == userId).FirstOrDefaultAsync();
+                User user = await _userCollection.Find(x => x.Id == modifyCart.UserId).FirstOrDefaultAsync();
                 if (user == null)
                 {
                     throw new Exception("Usuário não localizado.");
                 }
-                Product product = await _productCollection.Find(x => x.Id == productId).FirstOrDefaultAsync();
-                if (product == null) 
+                Product product = await _productCollection.Find(x => x.Id == modifyCart.ProductId).FirstOrDefaultAsync();
+                if (product == null)
                 {
                     throw new Exception("Produto não localizado.");
                 }
-                Cart cart = await _cartCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+                Cart cart = await _cartCollection.Find(x => x.UserId == modifyCart.UserId).FirstOrDefaultAsync();
                 if (product.Stock == 0)
                 {
                     throw new Exception("Produto Indisponível.");
@@ -75,16 +72,16 @@ namespace ShopPrint_API.Services
                     CartDTO newCart = new CartDTO
                     {
                         Id = null,
-                        UserId = userId,
+                        UserId = modifyCart.UserId,
                         Items = null,
                         TotalPrice = 0,
                     };
                     await CreateCart(newCart);
-                    cart = await _cartCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+                    cart = await _cartCollection.Find(x => x.UserId == modifyCart.UserId).FirstOrDefaultAsync();
                 }
-                foreach(var item in cart.Items)
+                foreach (var item in cart.Items)
                 {
-                    if(item.ProductId == productId)
+                    if (item.ProductId == modifyCart.ProductId)
                     {
                         item.Quantity += 1;
                         product.Stock += 1;
@@ -98,7 +95,7 @@ namespace ShopPrint_API.Services
                 CartItem cartItem = new CartItem
                 {
                     CartId = cart.Id,
-                    ProductId = productId,
+                    ProductId = modifyCart.ProductId,
                     Product = product,
                     Quantity = 1,
                     Price = product.Price
@@ -116,28 +113,28 @@ namespace ShopPrint_API.Services
             }
         }
 
-        public async Task<object> RemoveItem(string productId, string userId)
+        public async Task<object> RemoveItem(ModifyCart modifyCart)
         {
             try
             {
-                User user = await _userCollection.Find(x => x.Id == userId).FirstOrDefaultAsync();
+                User user = await _userCollection.Find(x => x.Id == modifyCart.UserId).FirstOrDefaultAsync();
                 if (user == null)
                 {
                     throw new Exception("Usuário não localizado.");
                 }
-                Product product = await _productCollection.Find(x => x.Id == productId).FirstOrDefaultAsync();
+                Product product = await _productCollection.Find(x => x.Id == modifyCart.ProductId).FirstOrDefaultAsync();
                 if (product == null)
                 {
                     throw new Exception("Produto não localizado.");
                 }
-                Cart cart = await _cartCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+                Cart cart = await _cartCollection.Find(x => x.UserId == modifyCart.UserId).FirstOrDefaultAsync();
                 if (cart == null)
                 {
                     throw new Exception("O usuário não possuí um carrinho");
                 }
                 foreach (var item in cart.Items)
                 {
-                    if (item.ProductId == productId)
+                    if (item.ProductId == modifyCart.ProductId)
                     {
                         item.Quantity -= 1;
                         product.Stock += 1;
@@ -183,28 +180,28 @@ namespace ShopPrint_API.Services
             return cart;
         }
 
-        public async Task<object> RemoveProductOfCart(string productId, string userId)
+        public async Task<object> RemoveProductOfCart(ModifyCart modifyCart)
         {
             try
             {
-                User user = await _userCollection.Find(x => x.Id == userId).FirstOrDefaultAsync();
+                User user = await _userCollection.Find(x => x.Id == modifyCart.UserId).FirstOrDefaultAsync();
                 if (user == null)
                 {
                     throw new Exception("Usuário não localizado.");
                 }
-                Product product = await _productCollection.Find(x => x.Id == productId).FirstOrDefaultAsync();
+                Product product = await _productCollection.Find(x => x.Id == modifyCart.ProductId).FirstOrDefaultAsync();
                 if (product == null)
                 {
                     throw new Exception("Produto não localizado.");
                 }
-                Cart cart = await _cartCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+                Cart cart = await _cartCollection.Find(x => x.UserId == modifyCart.UserId).FirstOrDefaultAsync();
                 if (cart == null)
                 {
                     throw new Exception("O usuário não possuí um carrinho");
                 }
                 foreach (var item in cart.Items)
                 {
-                    if (item.ProductId == productId)
+                    if (item.ProductId == modifyCart.ProductId)
                     {
                         product.Stock += item.Quantity;
                         await _productCollection.ReplaceOneAsync(x => x.Id == product.Id, product);
