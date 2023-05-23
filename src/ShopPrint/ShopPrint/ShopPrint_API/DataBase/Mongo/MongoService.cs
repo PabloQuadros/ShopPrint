@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Security.Authentication;
-using System.Xml.Xsl;
 
 namespace ShopPrint_API.DataBase.Mongo
 {
@@ -18,7 +17,7 @@ namespace ShopPrint_API.DataBase.Mongo
 
             MongoIdentity identity = new MongoInternalIdentity(mongoSettings.Value.DatabaseName, mongoSettings.Value.User);
             MongoIdentityEvidence evidence = new PasswordEvidence(mongoSettings.Value.Password);
-            settings.Credential = new MongoCredential(mongoSettings.Value.MongoDbAuthMechanism, identity, evidence);
+            //settings.Credential = new MongoCredential(mongoSettings.Value.MongoDbAuthMechanism, identity, evidence);
 
             MongoClient client = new MongoClient(settings);
             _iMongoDatabase = client.GetDatabase(mongoSettings.Value.DatabaseName);

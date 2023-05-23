@@ -5,15 +5,15 @@ services:
   shopprint_db:
     container_name: shopprint_db
     restart: always
-    command: [--auth]
+    #command: [--auth]
     ports: 
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-    environment:
-     MONGO_INITDB_ROOT_USERNAME: shop
-     MONGO_INITDB_ROOT_PASSWORD: shopPrint@123
-     AUTH_MECHANISM: SCRAM-SHA-256
+    #environment:
+    # MONGO_INITDB_ROOT_USERNAME: shop
+    # MONGO_INITDB_ROOT_PASSWORD: shopPrint@123
+    # AUTH_MECHANISM: SCRAM-SHA-256
 
 
   #shopprint_api:
