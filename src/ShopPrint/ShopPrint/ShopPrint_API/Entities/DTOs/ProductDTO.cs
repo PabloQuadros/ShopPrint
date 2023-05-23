@@ -22,7 +22,7 @@ namespace ShopPrint_API.Entities.DTOs
         [Range(0, 1000000, ErrorMessage = "O estoque deve estar entre 0 e 1.000.000.")]
         public int Stock { get; set; }
 
-        [UrlValidation]
+        //[UrlValidation]
         public string Image { get; set; }
 
         [Required(ErrorMessage = "Necessário informar uma categoria.")]

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopPrint_API.Entities.DTOs;
 using ShopPrint_API.Services;
-using System.Data;
 
 namespace ShopPrint_API.Controllers
 {
@@ -106,6 +105,22 @@ namespace ShopPrint_API.Controllers
             {
                 var result = await _productService.Filter(filter);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message.ToString() });
+            }
+        }
+
+        [HttpGet]
+        [Route("GetByName/{name}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByName([FromRoute] string name)
+        {
+            try
+            {
+                var product = await _productService.GetProductByName(name);
+                return Ok(product);
             }
             catch (Exception ex)
             {

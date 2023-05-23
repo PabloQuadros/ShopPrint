@@ -1,16 +1,11 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ShopPrint_API.Authentication;
 using ShopPrint_API.DataBase.Mongo;
 using ShopPrint_API.Entities.Mappings;
-using ShopPrint_API.Entities.Models;
 using ShopPrint_API.Services;
-using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -98,7 +93,7 @@ app.UseCors(x => x
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-app.UseAuthorization(); 
+app.UseAuthorization();
 
 
 app.MapControllers();

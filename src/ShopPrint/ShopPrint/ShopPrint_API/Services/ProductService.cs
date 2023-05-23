@@ -5,7 +5,6 @@ using MongoDB.Driver;
 using ShopPrint_API.DataBase.Mongo;
 using ShopPrint_API.Entities.DTOs;
 using ShopPrint_API.Entities.Models;
-using System.Runtime.ConstrainedExecution;
 
 namespace ShopPrint_API.Services
 {
@@ -29,22 +28,22 @@ namespace ShopPrint_API.Services
         public async Task<string> CreateProduct(ProductDTO newProduct)
         {
             Product product = await _productCollection.Find(x => x.Name == newProduct.Name).FirstOrDefaultAsync();
-            if(product != null)
+            if (product != null)
             {
                 throw new Exception($"Já existe um produto cadastrado com o nome: {newProduct.Name}");
             }
             Category category = await _categoryCollection.Find(x => x.Name.ToLower() == newProduct.CategoryName.ToLower()).FirstOrDefaultAsync();
-            if(category == null)
+            if (category == null)
             {
                 throw new Exception("A categoria informada não existe.");
             }
             Color color = await _colorCollection.Find(x => x.Name.ToLower() == newProduct.Color.ToLower()).FirstOrDefaultAsync();
-            if(color == null)
+            if (color == null)
             {
                 throw new Exception("A cor informada não existe.");
             }
             Material material = await _materialCollection.Find(x => x.Name.ToLower() == newProduct.Material.ToLower()).FirstOrDefaultAsync();
-            if(material == null)
+            if (material == null)
             {
                 throw new Exception("O material informado não existe.");
             }
@@ -60,7 +59,7 @@ namespace ShopPrint_API.Services
         public async Task<Object> GetProductById(string Id)
         {
             Product product = await _productCollection.Find(x => x.Id == Id).FirstOrDefaultAsync();
-            if(product == null )
+            if (product == null)
             {
                 throw new Exception("Produto nao localizado");
             }
@@ -72,7 +71,7 @@ namespace ShopPrint_API.Services
         {
             try
             {
-                IEnumerable<Product> productList  = await _productCollection.Find(c => c.Id != null).ToListAsync();
+                IEnumerable<Product> productList = await _productCollection.Find(c => c.Id != null).ToListAsync();
                 IEnumerable<ProductDTO> productDtos = productList.Select(mp => _mapper.Map<ProductDTO>(mp));
                 return productDtos;
             }
@@ -87,14 +86,14 @@ namespace ShopPrint_API.Services
             try
             {
                 Product product = await _productCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
-                if(product == null)
+                if (product == null)
                 {
                     throw new Exception("Produto não localizado.");
                 }
                 await _productCollection.DeleteOneAsync(x => x.Id == id);
                 return "Produto deletado.";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -103,12 +102,12 @@ namespace ShopPrint_API.Services
         public async Task<string> UpdateProduct(ProductDTO updateProduct)
         {
             Product product = await _productCollection.Find(x => x.Id == updateProduct.Id).FirstOrDefaultAsync();
-            if(product == null)
+            if (product == null)
             {
                 throw new Exception("Produto não localizado.");
             }
             product = await _productCollection.Find(x => x.Name == updateProduct.Name).FirstOrDefaultAsync();
-            if(product.Id != updateProduct.Id && product.Name == updateProduct.Name) 
+            if (product.Id != updateProduct.Id && product.Name == updateProduct.Name)
             {
                 throw new Exception("Já existe um produto registrado com esse nome.");
             }
@@ -143,11 +142,11 @@ namespace ShopPrint_API.Services
 
             if (filter.Color.Count > 0)
             {
-                var colorFilter = filterBuilder.In(x => x.Color,filter.Color);
+                var colorFilter = filterBuilder.In(x => x.Color, filter.Color);
                 filters.Add(colorFilter);
             }
 
-            if (filter.Material.Count> 0)
+            if (filter.Material.Count > 0)
             {
                 var materialFilter = filterBuilder.In(x => x.Material, filter.Material);
                 filters.Add(materialFilter);
@@ -176,7 +175,7 @@ namespace ShopPrint_API.Services
             var results = _productCollection.Find(combinedFilter).ToList();
 
             List<ProductDTO> returnList = new List<ProductDTO>();
-            if(results.Count > 0) 
+            if (results.Count > 0)
             {
                 foreach (var item in results)
                 {
@@ -184,6 +183,24 @@ namespace ShopPrint_API.Services
                 }
             }
             return returnList;
+        }
+
+        public async Task<ProductDTO> GetProductByName(string name)
+        {
+            try
+            {
+                var item = await _productCollection.Find(x => x.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
+                if (item == null)
+                {
+                    throw new Exception("Produto não localizado.");
+                }
+                return _mapper.Map<ProductDTO>(item);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
     }
 }
