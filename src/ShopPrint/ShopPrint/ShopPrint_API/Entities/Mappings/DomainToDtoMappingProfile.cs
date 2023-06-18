@@ -15,7 +15,10 @@ namespace ShopPrint_API.Entities.Mappings
             CreateMap<CartItem, CartItemDTO>().ReverseMap();
             CreateMap<Color, ColorDTO>().ReverseMap();
             CreateMap<Material,MaterialDTO>().ReverseMap();
-
+            CreateMap<Checkout,CheckoutDTO>().ReverseMap();
+            CreateMap<Pix, PixDTO>().ReverseMap();
+            CreateMap<BankSlip, BankSlipDTO>().ReverseMap();
+            CreateMap<Card,CardDTO>().ReverseMap();
         }
     }
 }

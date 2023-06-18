@@ -140,19 +140,19 @@ namespace ShopPrint_API.Services
             var filterBuilder = Builders<Product>.Filter;
             var filters = new List<FilterDefinition<Product>>();
 
-            if (filter.Color.Count > 0)
+            if (filter.Color != null && filter.Color.Count > 0)
             {
                 var colorFilter = filterBuilder.In(x => x.Color, filter.Color);
                 filters.Add(colorFilter);
             }
 
-            if (filter.Material.Count > 0)
+            if (filter.Material != null && filter.Material.Count > 0)
             {
                 var materialFilter = filterBuilder.In(x => x.Material, filter.Material);
                 filters.Add(materialFilter);
             }
 
-            if (filter.Category.Count > 0)
+            if (filter.Category != null && filter.Category.Count > 0)
             {
                 var categoryFilter = filterBuilder.In(x => x.CategoryName, filter.Category);
                 filters.Add(categoryFilter);
@@ -170,6 +170,7 @@ namespace ShopPrint_API.Services
                 filters.Add(maxValueFilter);
             }
 
+            
             var combinedFilter = filterBuilder.And(filters);
 
             var results = _productCollection.Find(combinedFilter).ToList();

@@ -1,10 +1,10 @@
-﻿using ShopPrint_API.Entities.Enums;
+﻿
+using ShopPrint_API.Entities.Enums;
 
-namespace ShopPrint_API.Entities.Models
+namespace ShopPrint_API.Entities.DTOs;
+public class CheckoutDTO
 {
-    public class Checkout
-    {
-        public string? Id { get; set; }
+    public string? Id { get; set; }
         public string userId { get; set; }
         public string Cep { get; set; }
         public string Street { get; set; }
@@ -13,8 +13,7 @@ namespace ShopPrint_API.Entities.Models
         public string Country { get; set; }
         public string? Complemenent { get; set; }
         public string? Reference { get; set; }
-        public Cart Cart { get; set; }
+        public CartDTO Cart { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public bool finished { get; set; }
-    }
 }
