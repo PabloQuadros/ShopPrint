@@ -137,46 +137,38 @@ namespace ShopPrint_API.Services
 
         public async Task<IEnumerable<ProductDTO>> Filter(FilterDTO filter)
         {
-            var filters = new List<FilterDefinition<Product>>();
+            IEnumerable<Product> productList = await _productCollection.Find(c => c.Id != null).ToListAsync();
 
-            if (filter.Color != null && filter.Color.Count > 0)
+
+            if (filter.Color != null && filter.Color.Count() > 0 )
             {
-                var colorFilter = Builders<Product>.Filter.In(x => x.Color, filter.Color);
-                filters.Add(colorFilter);
+                productList = productList.Where(c => filter.Color.Contains(c.Color)).ToList();
             }
 
-            if (filter.Material != null && filter.Material.Count > 0)
+            if (filter.Material != null && filter.Material.Count() > 0)
             {
-                var materialFilter = Builders<Product>.Filter.In(x => x.Material, filter.Material);
-                filters.Add(materialFilter);
+                productList = productList.Where(c => filter.Material.Contains(c.Material)).ToList();
             }
 
-            if (filter.Category != null && filter.Category.Count > 0)
+            if (filter.Category != null && filter.Category.Count() > 0)
             {
-                var categoryFilter = Builders<Product>.Filter.In(x => x.CategoryName, filter.Category);
-                filters.Add(categoryFilter);
+                productList = productList.Where(c => filter.Category.Contains(c.CategoryName)).ToList();
             }
 
-            if (filter.minValue.HasValue && filter.minValue >= 0)
+            if (filter.minValue != null && filter.minValue >= 0) 
             {
-                var minValueFilter = Builders<Product>.Filter.Lte(x => x.Price, filter.minValue);
-                filters.Add(minValueFilter);
+                productList = productList.Where(c => c.Price >= filter.minValue).ToList();
             }
 
-            if (filter.maxValue.HasValue && filter.maxValue >= 0)
+            if (filter.maxValue != null && filter.maxValue >= 0)
             {
-                var maxValueFilter = Builders<Product>.Filter.Gte(x => x.Price, filter.maxValue);
-                filters.Add(maxValueFilter);
+                productList = productList.Where(c => c.Price >= filter.maxValue).ToList();
             }
-
-            FilterDefinition<Product> combinedFilter = Builders<Product>.Filter.And(filters);
-
-            IList<Product> results  = await _productCollection.Find(combinedFilter).ToListAsync<Product>();
 
             List<ProductDTO> returnList = new List<ProductDTO>();
-            if (results.Count > 0)
+            if (productList.Count() > 0)
             {
-                foreach (var item in results)
+                foreach (var item in productList)
                 {
                     returnList.Add(_mapper.Map<ProductDTO>(item));
                 }
