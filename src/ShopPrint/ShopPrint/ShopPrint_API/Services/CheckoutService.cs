@@ -11,11 +11,13 @@ namespace ShopPrint_API.Services;
 public class CheckoutService
 {
     public readonly IMongoCollection<Checkout> _checkoutCollection;
+    public readonly IMongoCollection<Payment> _paymentCollection;
     private readonly IMapper _mapper;
     public CheckoutService(IOptions<MongoSettings> mongoSettingsPar, IMapper mapper)
     {
         MongoService mongoSettings = new MongoService(mongoSettingsPar);
         _checkoutCollection = mongoSettings._iMongoDatabase.GetCollection<Checkout>("Checkout");
+        _paymentCollection = mongoSettings._iMongoDatabase.GetCollection<Payment>("Payment");
         _mapper = mapper;
     }
 
@@ -80,6 +82,11 @@ public class CheckoutService
                 throw new Exception("Este checkout já foi finalizado.");   
             }
             await _checkoutCollection.DeleteOneAsync(x => x.Id == id);
+            var payment = _paymentCollection.Find(x => x.checkoutId == checkout.Id).FirstOrDefaultAsync();
+            if(payment != null)
+            {
+                await _paymentCollection.DeleteOneAsync(x => x.checkoutId == checkout.Id);
+            }
             return "Checkout deletado.";
         }
         catch(Exception ex)

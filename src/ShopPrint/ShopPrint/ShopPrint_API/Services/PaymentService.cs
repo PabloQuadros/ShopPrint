@@ -138,4 +138,36 @@ public class PaymentService
             throw;
         }
     }
+
+    public async Task<IEnumerable<object>> GetAllByUser(string userId)
+    {
+        try
+        {
+            IEnumerable<Payment> paymentList = await _paymentCollection.Find(c => c.userId == userId).ToListAsync();
+            IEnumerable<PaymentDTO> paymentDTOs = paymentList.Select(mp => _mapper.Map<PaymentDTO>(mp));
+            return paymentDTOs;
+        }
+        catch(Exception ex)
+        {
+            throw;
+        }
+    }
+
+     public async Task<object> GetById(string id)
+    {
+        try
+        {
+            Payment payment = await _paymentCollection.Find(c => c.Id == id).FirstOrDefaultAsync();
+            if (payment == null)
+            {
+                throw new Exception("O payment não foi localizada.");
+            }
+            PaymentDTO paymentDTO = _mapper.Map<PaymentDTO>(payment);
+            return paymentDTO;
+        }
+        catch (Exception ex) 
+        {
+            throw;
+        }
+    }
 }
