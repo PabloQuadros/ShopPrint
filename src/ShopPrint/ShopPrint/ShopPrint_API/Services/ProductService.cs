@@ -137,43 +137,41 @@ namespace ShopPrint_API.Services
 
         public async Task<IEnumerable<ProductDTO>> Filter(FilterDTO filter)
         {
-            var filterBuilder = Builders<Product>.Filter;
             var filters = new List<FilterDefinition<Product>>();
 
             if (filter.Color != null && filter.Color.Count > 0)
             {
-                var colorFilter = filterBuilder.In(x => x.Color, filter.Color);
+                var colorFilter = Builders<Product>.Filter.In(x => x.Color, filter.Color);
                 filters.Add(colorFilter);
             }
 
             if (filter.Material != null && filter.Material.Count > 0)
             {
-                var materialFilter = filterBuilder.In(x => x.Material, filter.Material);
+                var materialFilter = Builders<Product>.Filter.In(x => x.Material, filter.Material);
                 filters.Add(materialFilter);
             }
 
             if (filter.Category != null && filter.Category.Count > 0)
             {
-                var categoryFilter = filterBuilder.In(x => x.CategoryName, filter.Category);
+                var categoryFilter = Builders<Product>.Filter.In(x => x.CategoryName, filter.Category);
                 filters.Add(categoryFilter);
             }
 
             if (filter.minValue.HasValue && filter.minValue >= 0)
             {
-                var minValueFilter = filterBuilder.Lte(x => x.Price, filter.minValue);
+                var minValueFilter = Builders<Product>.Filter.Lte(x => x.Price, filter.minValue);
                 filters.Add(minValueFilter);
             }
 
             if (filter.maxValue.HasValue && filter.maxValue >= 0)
             {
-                var maxValueFilter = filterBuilder.Gte(x => x.Price, filter.maxValue);
+                var maxValueFilter = Builders<Product>.Filter.Gte(x => x.Price, filter.maxValue);
                 filters.Add(maxValueFilter);
             }
 
-            
-            var combinedFilter = filterBuilder.And(filters);
+            FilterDefinition<Product> combinedFilter = Builders<Product>.Filter.And(filters);
 
-            var results = await _productCollection.Find(combinedFilter).ToListAsync();
+            IList<Product> results  = await _productCollection.Find(combinedFilter).ToListAsync<Product>();
 
             List<ProductDTO> returnList = new List<ProductDTO>();
             if (results.Count > 0)
