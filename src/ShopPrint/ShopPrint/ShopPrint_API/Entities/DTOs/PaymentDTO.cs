@@ -1,6 +1,7 @@
 ﻿namespace ShopPrint_API.Entities.DTOs;
 public class PaymentDTO
 {
+    public string? Id { get; set; }
     public string? userId { get; set; }
     public string? Company { get; set; }
     public string? userName { get; set; }

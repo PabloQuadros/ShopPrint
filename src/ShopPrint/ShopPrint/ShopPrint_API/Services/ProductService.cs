@@ -173,7 +173,7 @@ namespace ShopPrint_API.Services
             
             var combinedFilter = filterBuilder.And(filters);
 
-            var results = _productCollection.Find(combinedFilter).ToList();
+            var results = await _productCollection.Find(combinedFilter).ToListAsync();
 
             List<ProductDTO> returnList = new List<ProductDTO>();
             if (results.Count > 0)

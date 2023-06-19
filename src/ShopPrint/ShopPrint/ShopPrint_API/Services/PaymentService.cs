@@ -1,6 +1,8 @@
 ﻿using System.Security.Cryptography;
 using AutoMapper;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ShopPrint_API.DataBase.Mongo;
 using ShopPrint_API.Entities.DTOs;
@@ -23,7 +25,7 @@ public class PaymentService
         _userService = userService;
     }
 
-    public async Task<object> Pay(string checkoutId, PixDTO? pix, CardDTO? card, BankSlipDTO? banckSlip)
+    public async Task<object> Pay(string checkoutId, PixDTO? pix, BankSlipDTO? bankSlip)
     {
         try
         {
@@ -36,26 +38,32 @@ public class PaymentService
             {
                 throw new Exception("O checkout já foi finalizado.");
             }
+            var exist = _paymentCollection.Find(c => c.checkoutId == checkoutId).FirstOrDefault();
+            if(exist != null)
+            {
+                throw new Exception("Já existe uma ordem de pagamento aberta para esse checkout.");
+            }
             switch(checkout.PaymentMethod)
             {
                 case PaymentMethod.Pix:
-                    Pix entity = _mapper.Map<Pix>(pix);
-                    UserDTO user = _mapper.Map<UserDTO>(_userService.GetUserById(entity.userId));
-                    if(checkout.userId != entity.userId)
+                    Pix entityPix = _mapper.Map<Pix>(pix);
+                    UserDTO userPix = _mapper.Map<UserDTO>(_userService.GetUserById(entityPix.userId));
+                    if(checkout.userId != entityPix.userId)
                     {
                         throw new Exception("Os ids de usuário informados estão divergentes.");
                     }
-                    if(user == null)
+                    if(userPix == null)
                     {
                         throw new Exception("Usuário não encontrado.");
                     }
                     Pix pixReturn = new()
                     {
-                        CPF = entity.CPF,
+                        Id = ObjectId.GenerateNewId().ToString(),
+                        CPF = entityPix.CPF,
                         pixCode = "shopPrint@gmail.com",
-                        userId = user.Id,
+                        userId = userPix.Id,
                         Company = "ShopPrint",
-                        userName = user.UserName,
+                        userName = userPix.UserName,
                         emissionDate = DateTime.Now,
                         validityDate = DateTime.Now.AddDays(3),
                         paidOutDate = null,
@@ -63,17 +71,40 @@ public class PaymentService
                         checkoutId = checkout.Id,
                         paidOut = false
                     };
-                    _paymentCollection.InsertOneAsync(pixReturn);
-                    return pixReturn;
-                    break;
-                case PaymentMethod.Debit:
-                    break;
-                case PaymentMethod.Credit:
+                    await _paymentCollection.InsertOneAsync(pixReturn);
+                    return _mapper.Map<PixDTO>(pixReturn);
                     break;
                 case PaymentMethod.BankSlip:
+                    BankSlip entityBankSlip = _mapper.Map<BankSlip>(bankSlip);
+                    UserDTO userBankSlip = _mapper.Map<UserDTO>(_userService.GetUserById(bankSlip.userId));
+                    if(checkout.userId != bankSlip.userId)
+                    {
+                        throw new Exception("Os ids de usuário informados estão divergentes.");
+                    }
+                    if(userBankSlip == null)
+                    {
+                        throw new Exception("Usuário não encontrado.");
+                    }
+                    BankSlip bankSlipReturn = new()
+                    {
+                        Id = ObjectId.GenerateNewId().ToString(),
+                        CPF = entityBankSlip.CPF,
+                        bankSlipCode = "34191.75124 34567.871230 41234.560005 1 93850000026035",
+                        userId = userBankSlip.Id,
+                        Company = "ShopPrint",
+                        userName = userBankSlip.UserName,
+                        emissionDate = DateTime.Now,
+                        validityDate = DateTime.Now.AddDays(3),
+                        paidOutDate = null,
+                        value = checkout.Cart.TotalPrice,
+                        checkoutId = checkout.Id,
+                        paidOut = false
+                    };
+                    await _paymentCollection.InsertOneAsync(bankSlipReturn);
+                    return _mapper.Map<BankSlipDTO>(bankSlipReturn);
                     break;
             }
-            return null;
+            throw new Exception("Algo deu errado");
         }
         catch (Exception ex)
         {
@@ -81,4 +112,30 @@ public class PaymentService
         }
     }
 
+    public async Task<object> finalizePayment(string paymentId)
+    {
+        try
+        {
+            var exist = await _paymentCollection.Find(c => c.Id == paymentId).FirstOrDefaultAsync();
+            if(exist == null)
+            {
+                throw new Exception("Payment não localizado.");
+            }
+            if(exist.paidOut == true)
+            {
+                throw new Exception("Payment já finalizado.");
+            }
+            exist.paidOut = true;
+            exist.paidOutDate = DateTime.Now;
+            var checkout = await _checkoutCollection.Find(c => c.Id == exist.checkoutId).FirstOrDefaultAsync();
+            checkout.finished = true;
+            await _paymentCollection.ReplaceOneAsync(c => c.Id == exist.Id, exist);
+            await _checkoutCollection.ReplaceOneAsync(c => c.Id == checkout.Id, checkout);
+            return exist.Id;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
 }

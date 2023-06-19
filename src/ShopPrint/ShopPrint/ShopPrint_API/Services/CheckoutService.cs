@@ -103,6 +103,7 @@ public class CheckoutService
             }
             checkout = _mapper.Map<Checkout>(updateCheckout);
             checkout.Id = Id;
+            await _checkoutCollection.ReplaceOneAsync(x => x.Id == checkout.Id, checkout);
             return Id;
         }
         catch(Exception ex)
