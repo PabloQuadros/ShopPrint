@@ -162,7 +162,7 @@ namespace ShopPrint_API.Services
 
             if (filter.maxValue != null && filter.maxValue >= 0)
             {
-                productList = productList.Where(c => c.Price >= filter.maxValue).ToList();
+                productList = productList.Where(c => c.Price <= filter.maxValue).ToList();
             }
 
             List<ProductDTO> returnList = new List<ProductDTO>();
