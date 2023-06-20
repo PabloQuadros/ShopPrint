@@ -45,7 +45,12 @@ public class PaymentService
             {
                 case PaymentMethod.Pix:
                     Pix entityPix = _mapper.Map<Pix>(pix);
-                    UserDTO userPix = _mapper.Map<UserDTO>(_userService.GetUserById(entityPix.userId));
+                    var userExist = _userService.GetUserById(entityPix.userId);
+                    if (userExist == null)
+                    {
+                        throw new Exception("Usuário não localizado.");
+                    }
+                    UserDTO userPix = _mapper.Map<UserDTO>(userExist);
                     if (checkout.userId != entityPix.userId)
                     {
                         throw new Exception("Os ids de usuário informados estão divergentes.");
@@ -74,7 +79,12 @@ public class PaymentService
                     break;
                 case PaymentMethod.BankSlip:
                     BankSlip entityBankSlip = _mapper.Map<BankSlip>(bankSlip);
-                    UserDTO userBankSlip = _mapper.Map<UserDTO>(_userService.GetUserById(entityBankSlip.userId));
+                    var userExists = _userService.GetUserById(entityBankSlip.userId);
+                    if (userExists == null)
+                    {
+                        throw new Exception("Usuário não localizado.");
+                    }
+                    UserDTO userBankSlip = _mapper.Map<UserDTO>(userExists);
                     if (checkout.userId != bankSlip.userId)
                     {
                         throw new Exception("Os ids de usuário informados estão divergentes.");
