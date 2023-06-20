@@ -13,6 +13,7 @@ public class PaymentService
     public readonly IMongoCollection<Payment> _paymentCollection;
     public readonly IMongoCollection<Checkout> _checkoutCollection;
     public readonly IMongoCollection<User> _userCollection;
+    public readonly IMongoCollection<Cart> _cartCollection;
     private readonly IMapper _mapper;
     public readonly UserService _userService;
     public PaymentService(IOptions<MongoSettings> mongoSettingsPar, IMapper mapper, UserService userService)
@@ -21,6 +22,7 @@ public class PaymentService
         _paymentCollection = mongoSettings._iMongoDatabase.GetCollection<Payment>("Payment");
         _checkoutCollection = mongoSettings._iMongoDatabase.GetCollection<Checkout>("Checkout");
         _userCollection = mongoSettings._iMongoDatabase.GetCollection<User>("User");
+        _cartCollection = mongoSettings._iMongoDatabase.GetCollection<Cart>("Cart");
         _mapper = mapper;
         _userService = userService;
     }
@@ -141,6 +143,7 @@ public class PaymentService
             checkout.finished = true;
             await _paymentCollection.ReplaceOneAsync(c => c.Id == exist.Id, exist);
             await _checkoutCollection.ReplaceOneAsync(c => c.Id == checkout.Id, checkout);
+            await _cartCollection.DeleteOneAsync(c => c.Id == checkout.Cart.Id);
             return exist;
         }
         catch (Exception ex)
