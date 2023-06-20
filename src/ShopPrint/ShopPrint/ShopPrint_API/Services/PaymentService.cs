@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-using AutoMapper;
-using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿using AutoMapper;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -34,25 +32,25 @@ public class PaymentService
             {
                 throw new Exception("O checkout não foi localizada.");
             }
-            if(checkout.finished == true)
+            if (checkout.finished == true)
             {
                 throw new Exception("O checkout já foi finalizado.");
             }
             var exist = _paymentCollection.Find(c => c.checkoutId == checkoutId).FirstOrDefault();
-            if(exist != null)
+            if (exist != null)
             {
                 throw new Exception("Já existe uma ordem de pagamento aberta para esse checkout.");
             }
-            switch(checkout.PaymentMethod)
+            switch (checkout.PaymentMethod)
             {
                 case PaymentMethod.Pix:
                     Pix entityPix = _mapper.Map<Pix>(pix);
                     UserDTO userPix = _mapper.Map<UserDTO>(_userService.GetUserById(entityPix.userId));
-                    if(checkout.userId != entityPix.userId)
+                    if (checkout.userId != entityPix.userId)
                     {
                         throw new Exception("Os ids de usuário informados estão divergentes.");
                     }
-                    if(userPix == null)
+                    if (userPix == null)
                     {
                         throw new Exception("Usuário não encontrado.");
                     }
@@ -77,11 +75,11 @@ public class PaymentService
                 case PaymentMethod.BankSlip:
                     BankSlip entityBankSlip = _mapper.Map<BankSlip>(bankSlip);
                     UserDTO userBankSlip = _mapper.Map<UserDTO>(_userService.GetUserById(bankSlip.userId));
-                    if(checkout.userId != bankSlip.userId)
+                    if (checkout.userId != bankSlip.userId)
                     {
                         throw new Exception("Os ids de usuário informados estão divergentes.");
                     }
-                    if(userBankSlip == null)
+                    if (userBankSlip == null)
                     {
                         throw new Exception("Usuário não encontrado.");
                     }
@@ -117,11 +115,11 @@ public class PaymentService
         try
         {
             var exist = await _paymentCollection.Find(c => c.Id == paymentId).FirstOrDefaultAsync();
-            if(exist == null)
+            if (exist == null)
             {
                 throw new Exception("Payment não localizado.");
             }
-            if(exist.paidOut == true)
+            if (exist.paidOut == true)
             {
                 throw new Exception("Payment já finalizado.");
             }
@@ -131,7 +129,7 @@ public class PaymentService
             checkout.finished = true;
             await _paymentCollection.ReplaceOneAsync(c => c.Id == exist.Id, exist);
             await _checkoutCollection.ReplaceOneAsync(c => c.Id == checkout.Id, checkout);
-            return exist.Id;
+            return exist;
         }
         catch (Exception ex)
         {
@@ -147,13 +145,13 @@ public class PaymentService
             IEnumerable<PaymentDTO> paymentDTOs = paymentList.Select(mp => _mapper.Map<PaymentDTO>(mp));
             return paymentDTOs;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             throw;
         }
     }
 
-     public async Task<object> GetById(string id)
+    public async Task<object> GetById(string id)
     {
         try
         {
@@ -165,7 +163,7 @@ public class PaymentService
             PaymentDTO paymentDTO = _mapper.Map<PaymentDTO>(payment);
             return paymentDTO;
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             throw;
         }
