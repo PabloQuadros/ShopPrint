@@ -74,7 +74,7 @@ public class PaymentService
                     break;
                 case PaymentMethod.BankSlip:
                     BankSlip entityBankSlip = _mapper.Map<BankSlip>(bankSlip);
-                    UserDTO userBankSlip = _mapper.Map<UserDTO>(_userService.GetUserById(bankSlip.userId));
+                    UserDTO userBankSlip = _mapper.Map<UserDTO>(_userService.GetUserById(entityBankSlip.userId));
                     if (checkout.userId != bankSlip.userId)
                     {
                         throw new Exception("Os ids de usuário informados estão divergentes.");
