@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -27,8 +26,9 @@ public class CheckoutService
         {
             Checkout checkout = _mapper.Map<Checkout>(newCheckout);
             checkout.Id = ObjectId.GenerateNewId().ToString();
+            checkout.finished = false;
             await _checkoutCollection.InsertOneAsync(checkout);
-            return checkout.Id;                
+            return checkout.Id;
         }
         catch (Exception ex)
         {
@@ -44,7 +44,7 @@ public class CheckoutService
             IEnumerable<CheckoutDTO> checkoutDTOs = checkoutList.Select(mp => _mapper.Map<CheckoutDTO>(mp));
             return checkoutDTOs;
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             throw;
         }
@@ -62,7 +62,7 @@ public class CheckoutService
             CheckoutDTO checkoutDTO = _mapper.Map<CheckoutDTO>(checkout);
             return checkoutDTO;
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             throw;
         }
@@ -77,21 +77,21 @@ public class CheckoutService
             {
                 throw new Exception("Checkout não localizado.");
             }
-            if(checkout.finished == true)
+            if (checkout.finished == true)
             {
-                throw new Exception("Este checkout já foi finalizado.");   
+                throw new Exception("Este checkout já foi finalizado.");
             }
             await _checkoutCollection.DeleteOneAsync(x => x.Id == id);
             var payment = _paymentCollection.Find(x => x.checkoutId == checkout.Id).FirstOrDefaultAsync();
-            if(payment != null)
+            if (payment != null)
             {
                 await _paymentCollection.DeleteOneAsync(x => x.checkoutId == checkout.Id);
             }
             return "Checkout deletado.";
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-        throw;
+            throw;
         }
     }
 
@@ -104,16 +104,16 @@ public class CheckoutService
             {
                 throw new Exception("Checkout não localizado.");
             }
-            if(checkout.finished == true)
+            if (checkout.finished == true)
             {
-                throw new Exception("Este checkout já foi finalizado.");   
+                throw new Exception("Este checkout já foi finalizado.");
             }
             checkout = _mapper.Map<Checkout>(updateCheckout);
             checkout.Id = Id;
             await _checkoutCollection.ReplaceOneAsync(x => x.Id == checkout.Id, checkout);
             return Id;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             throw;
         }
