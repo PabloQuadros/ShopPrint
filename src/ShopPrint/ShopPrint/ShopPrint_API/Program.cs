@@ -75,6 +75,8 @@ builder.Services.AddSingleton<ProductService>();
 builder.Services.AddSingleton<CartService>();
 builder.Services.AddSingleton<ColorService>();
 builder.Services.AddSingleton<MaterialService>();
+builder.Services.AddSingleton<CheckoutService>();
+builder.Services.AddSingleton<PaymentService>();
 
 var app = builder.Build();
 
