@@ -12,6 +12,7 @@ public class PaymentService
 {
     public readonly IMongoCollection<Payment> _paymentCollection;
     public readonly IMongoCollection<Checkout> _checkoutCollection;
+    public readonly IMongoCollection<User> _userCollection;
     private readonly IMapper _mapper;
     public readonly UserService _userService;
     public PaymentService(IOptions<MongoSettings> mongoSettingsPar, IMapper mapper, UserService userService)
@@ -19,6 +20,7 @@ public class PaymentService
         MongoService mongoSettings = new MongoService(mongoSettingsPar);
         _paymentCollection = mongoSettings._iMongoDatabase.GetCollection<Payment>("Payment");
         _checkoutCollection = mongoSettings._iMongoDatabase.GetCollection<Checkout>("Checkout");
+        _userCollection = mongoSettings._iMongoDatabase.GetCollection<User>("User");
         _mapper = mapper;
         _userService = userService;
     }
@@ -45,7 +47,7 @@ public class PaymentService
             {
                 case PaymentMethod.Pix:
                     Pix entityPix = _mapper.Map<Pix>(pix);
-                    var userExist = _userService.GetUserById(entityPix.userId);
+                    var userExist = await _userCollection.Find(x => x.Id == entityPix.userId).FirstOrDefaultAsync();
                     if (userExist == null)
                     {
                         throw new Exception("Usuário não localizado.");
@@ -79,7 +81,7 @@ public class PaymentService
                     break;
                 case PaymentMethod.BankSlip:
                     BankSlip entityBankSlip = _mapper.Map<BankSlip>(bankSlip);
-                    var userExists = _userService.GetUserById(entityBankSlip.userId);
+                    var userExists = await _userCollection.Find(x => x.Id == entityBankSlip.userId).FirstOrDefaultAsync();
                     if (userExists == null)
                     {
                         throw new Exception("Usuário não localizado.");
