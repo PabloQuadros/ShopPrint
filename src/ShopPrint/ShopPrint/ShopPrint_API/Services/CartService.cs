@@ -84,7 +84,7 @@ namespace ShopPrint_API.Services
                     if (item.ProductId == modifyCart.ProductId)
                     {
                         item.Quantity += 1;
-                        product.Stock += 1;
+                        product.Stock -= 1;
                         await _productCollection.ReplaceOneAsync(x => x.Id == product.Id, product);
                         item.Price = item.Quantity * item.Product.Price;
                         cart.TotalPrice += item.Price;
@@ -101,7 +101,7 @@ namespace ShopPrint_API.Services
                     Price = product.Price
                 };
                 cart.Items.Add(cartItem);
-                product.Stock += 1;
+                product.Stock -= 1;
                 await _productCollection.ReplaceOneAsync(x => x.Id == product.Id, product);
                 cart.TotalPrice += cartItem.Price;
                 await _cartCollection.ReplaceOneAsync(x => x.Id == cart.Id, cart);
